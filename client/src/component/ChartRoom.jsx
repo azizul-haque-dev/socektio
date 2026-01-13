@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
 export default function ChatRoom({ userName, room }) {
@@ -11,7 +11,7 @@ export default function ChatRoom({ userName, room }) {
 
   useEffect(() => {
     // Initialize socket
-    socketRef.current = io("https://reimagined-space-orbit-qrjqx9pvx7r3xrp6-3001.app.github.dev/"); // Replace with deployed URL
+    socketRef.current = io("http://localhost:3001"); // Connect to local server
 
     // Join room
     socketRef.current.emit("join_room", room);
@@ -47,8 +47,8 @@ export default function ChatRoom({ userName, room }) {
       message,
       time: new Date().toLocaleTimeString([], {
         hour: "2-digit",
-        minute: "2-digit",
-      }),
+        minute: "2-digit"
+      })
     };
 
     socketRef.current.emit("send_message", messageData);
@@ -74,15 +74,15 @@ export default function ChatRoom({ userName, room }) {
             key={msg.id}
             className={`max-w-xs px-4 py-2 rounded-lg text-sm ${
               msg.author === userName
-                ? "bg-indigo-600 text-white ml-auto"
-                : "bg-white text-gray-800"
+                ? "bg-indigo-600 text-white ml-auto text-right"
+                : "bg-white text-gray-800 ml-auto text-left"
             }`}
           >
             <span className="block text-xs font-medium opacity-70">
               {msg.author}
             </span>
             <p>{msg.message}</p>
-            <span className="block text-[10px] text-right opacity-60 mt-1">
+            <span className="block text-[10px] text-left opacity-60 mt-1">
               {msg.time}
             </span>
           </div>
@@ -92,7 +92,9 @@ export default function ChatRoom({ userName, room }) {
 
       {/* Typing Indicator */}
       {typingUser && (
-        <div className="px-4 text-sm text-gray-500">{typingUser} is typing...</div>
+        <div className="px-4 text-sm text-gray-500">
+          {typingUser} is typing...
+        </div>
       )}
 
       {/* Input */}
